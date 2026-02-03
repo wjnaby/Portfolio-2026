@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Moon, Sun, Github, Linkedin, Mail, ExternalLink, Menu, X, MapPin, Phone, Code } from 'lucide-react';
+import { Moon, Sun, Github, Linkedin, Mail, ExternalLink, Menu, X, MapPin, Phone, Code, ChevronUp } from 'lucide-react';
 
 // Particle trail cursor component
 function ParticleCursor() {
@@ -331,6 +331,7 @@ export default function Portfolio() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [typedText, setTypedText] = useState('');
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const fullText = 'Computer Science Student & Web Developer';
 
   const [aboutRef, aboutVisible] = useReveal();
@@ -360,11 +361,14 @@ export default function Portfolio() {
     return () => clearInterval(interval);
   }, []);
 
-  // Scroll tracking for active section
+  // Scroll tracking for active section and scroll to top button
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['home', 'about', 'education', 'projects', 'contact'];
       const scrollPosition = window.scrollY + 100;
+
+      // Show/hide scroll to top button
+      setShowScrollTop(window.scrollY > 400);
 
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -382,6 +386,10 @@ export default function Portfolio() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const projects = [
     {
       title: "Attendance Management System",
@@ -397,7 +405,7 @@ export default function Portfolio() {
       tech: ["Ruby", "Ruby on Rails ", "Bootstrap 5", "CSS", "HTML", "Hotwire/Turbo", "JavaScript"],
       link: "https://github.com/wjnaby/sw_kitchen_bites",
       type: "Academic Project",
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80"
+      image: import.meta.env.BASE_URL + "kitchen.jpeg"
     },
     {
       title: "Walk With Me 2026",
@@ -405,7 +413,32 @@ export default function Portfolio() {
       tech: ["Ruby", "Ruby on Rails 8 ", "Bootstrap 5", "CSS", "HTML", "Hotwire/Turbo", "JavaScript", "Tailwind CSS", "PostgreSQL","Subdomain routing"],
       link: "https://walkwithme.my/",
       type: "Internship Project",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80"
+      image: import.meta.env.BASE_URL + "walkwithme.jpeg",
+      isLive: true
+    },
+    {
+      title: "Cafe Ordering System",
+      description: "Full-stack cafe ordering system with Admin and User roles. Features admin dashboard to manage menu items, pricing, and customer orders (CRUD operations), plus user-facing ordering flow for browsing menus and placing orders.",
+      tech: ["Laravel", "PHP", "MySQL", "Tailwind CSS", "Vite", "JavaScript", "Git"],
+      link: "https://github.com/wjnaby/cafe-system",
+      type: "Academic Project",
+      image: import.meta.env.BASE_URL + "cafe-order.jpeg"
+    },
+    {
+      title: "Cafe Recommendation System",
+      description: "A café recommendation web application with rule-based logic to personalize recommendations based on user preferences.",
+      tech: ["PHP", "MySQL", "CSS", "HTML", "JavaScript"],
+      link: "https://github.com/wjnaby/Jw-Recommendation-System",
+      type: "Academic Project",
+      image: import.meta.env.BASE_URL + "cafe-recommendation.jpeg"
+    },
+    {
+      title: "Todo App",
+      description: "A task management system with reminders, notes, and calendar view. Features CRUD operations for tasks and notes using Ruby on Rails MVC architecture with an interactive frontend.",
+      tech: ["Ruby", "Ruby on Rails", "HTML", "CSS", "JavaScript", "SQLite", "Git"],
+      link: "https://github.com/wjnaby/todo_app",
+      type: "Academic Project",
+      image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&q=80"
     }
   ];
 
@@ -560,7 +593,7 @@ export default function Portfolio() {
                 View My Work
               </button>
               <a
-                href="/resume.pdf"
+                href={import.meta.env.BASE_URL + "resume.pdf"}
                 download
                 className={`px-8 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 hover:-translate-y-1 active:scale-95 animate-bounce-in ${
                   darkMode
@@ -808,7 +841,7 @@ export default function Portfolio() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-blue-500 hover:text-purple-600 transition-colors group/link"
                   >
-                    View on GitHub 
+                    {project.isLive ? 'View Live Site' : 'View on GitHub'}
                     <ExternalLink size={16} className="ml-2 transform group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
                   </a>
                 </div>
@@ -890,7 +923,7 @@ export default function Portfolio() {
           </div>
 
           {/* Social Links */}
-          <div className="flex justify-center space-x-6">
+          <div className="flex justify-center space-x-6 mb-8">
             {[
               { icon: Github, link: "https://github.com/wjnaby", delay: 0 },
               { icon: Linkedin, link: "https://linkedin.com/in/yourusername", delay: 150 },
@@ -912,15 +945,40 @@ export default function Portfolio() {
               </a>
             ))}
           </div>
+
+          {/* Resume Button */}
+          <div className="flex justify-center">
+            <a
+              href={import.meta.env.BASE_URL + "resume.pdf"}
+              download
+              className={`px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-500/50 transform hover:scale-105 hover:-translate-y-1 active:scale-95 transition-all duration-300 ${
+                contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}
+              style={{ transitionDelay: '450ms' }}
+            >
+              Download Resume
+            </a>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
       <footer className={`py-8 text-center ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
         <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-          © 2026 Fatin. Built with React, TypeScript & Tailwind CSS
+          © 2026 Fatin. 
         </p>
       </footer>
+
+      {/* Scroll to Top Button */}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-8 right-8 p-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-blue-500/50 transform hover:scale-110 hover:-translate-y-1 active:scale-95 transition-all duration-300 z-50 ${
+          showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
+        }`}
+        aria-label="Scroll to top"
+      >
+        <ChevronUp size={24} />
+      </button>
 
       <style>{`
         @keyframes fade-in-up {
