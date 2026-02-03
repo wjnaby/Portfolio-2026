@@ -404,7 +404,7 @@ export default function Portfolio() {
       description: "This is a social recipe-sharing web application built with Ruby on Rails that allows users to post, discover, and interact with cooking recipes.",
       tech: ["Ruby", "Ruby on Rails ", "Bootstrap 5", "CSS", "HTML", "Hotwire/Turbo", "JavaScript"],
       link: "https://github.com/wjnaby/sw_kitchen_bites",
-      type: "Academic Project",
+      type: "Personal Project",
       image: import.meta.env.BASE_URL + "kitchen.jpeg"
     },
     {
@@ -421,7 +421,7 @@ export default function Portfolio() {
       description: "Full-stack cafe ordering system with Admin and User roles. Features admin dashboard to manage menu items, pricing, and customer orders (CRUD operations), plus user-facing ordering flow for browsing menus and placing orders.",
       tech: ["Laravel", "PHP", "MySQL", "Tailwind CSS", "Vite", "JavaScript", "Git"],
       link: "https://github.com/wjnaby/cafe-system",
-      type: "Academic Project",
+      type: "Personal Project",
       image: import.meta.env.BASE_URL + "cafe-order.jpeg"
     },
     {
@@ -437,7 +437,7 @@ export default function Portfolio() {
       description: "A task management system with reminders, notes, and calendar view. Features CRUD operations for tasks and notes using Ruby on Rails MVC architecture with an interactive frontend.",
       tech: ["Ruby", "Ruby on Rails", "HTML", "CSS", "JavaScript", "SQLite", "Git"],
       link: "https://github.com/wjnaby/todo_app",
-      type: "Academic Project",
+      type: "Personal Project",
       image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&q=80"
     }
   ];
