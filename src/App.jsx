@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Moon, Sun, Github, Linkedin, Mail, ExternalLink, Menu, X, MapPin, Phone, Code, ChevronUp } from 'lucide-react';
-import IntroScreen from './components/IntroScreen';
 
 // Particle trail cursor component
 function ParticleCursor() {
@@ -328,27 +327,12 @@ function SkillButton({ skill, level, index, visible, darkMode }) {
 }
 
 export default function Portfolio() {
-  // Intro screen state
-  const [showIntro, setShowIntro] = useState(true);
-  const [isIntroExiting, setIsIntroExiting] = useState(false);
-  const [portfolioVisible, setPortfolioVisible] = useState(false);
-
   const [darkMode, setDarkMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [typedText, setTypedText] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
   const fullText = 'Computer Science Student & Web Developer';
-
-  // Handle intro screen exit
-  const handleEnterPortfolio = () => {
-    setIsIntroExiting(true);
-    // Wait for fade-out animation to complete before hiding intro
-    setTimeout(() => {
-      setShowIntro(false);
-      setPortfolioVisible(true);
-    }, 700); // Match the transition duration (0.7s)
-  };
 
   const [aboutRef, aboutVisible] = useReveal();
   const [educationRef, educationVisible] = useReveal();
@@ -380,7 +364,7 @@ export default function Portfolio() {
   // Scroll tracking for active section and scroll to top button
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'skills', 'education', 'projects', 'contact'];
+      const sections = ['home', 'about', 'education', 'projects', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
       // Show/hide scroll to top button
@@ -463,32 +447,19 @@ export default function Portfolio() {
       category: "Frontend", 
       items: [
         { name: "React", level: "Advanced" },
-        { name: "Vue.js", level: "Intermediate" },
-        { name: "JavaScript", level: "Advanced" },
         { name: "TypeScript", level: "Intermediate" },
         { name: "Tailwind CSS", level: "Expert" },
-        { name: "Bootstrap 5", level: "Advanced" },
-        { name: "HTML5", level: "Expert" },
-        { name: "CSS", level: "Expert" }
+        { name: "HTML/CSS", level: "Expert" }
       ]
     },
     { 
       category: "Backend", 
       items: [
-        { name: "Ruby", level: "Advanced" },
-        { name: "Ruby on Rails", level: "Advanced" },
-        { name: "PHP", level: "Intermediate" },
-        { name: "Laravel", level: "Advanced" },
         { name: "Node.js", level: "Advanced" },
         { name: "Express", level: "Intermediate" },
-        { name: "Hotwire/Turbo", level: "Intermediate" }
-      ]
-    },
-    { 
-      category: "Database", 
-      items: [
-        { name: "MySQL", level: "Advanced" },
-        { name: "PostgreSQL", level: "Intermediate" }
+        { name: "PHP", level: "Intermediate" },
+        { name: "Laravel", level: "Advanced" },
+        { name: "MySQL", level: "Advanced" }
       ]
     },
     { 
@@ -497,7 +468,6 @@ export default function Portfolio() {
         { name: "Git", level: "Expert" },
         { name: "GitHub", level: "Expert" },
         { name: "VS Code", level: "Expert" },
-        { name: "Vite", level: "Advanced" },
         { name: "Postman", level: "Advanced" },
         { name: "Figma", level: "Intermediate" }
       ]
@@ -511,19 +481,7 @@ export default function Portfolio() {
   };
 
   return (
-    <>
-      {/* Intro Screen */}
-      {showIntro && (
-        <IntroScreen onEnter={handleEnterPortfolio} isExiting={isIntroExiting} />
-      )}
-
-      {/* Main Portfolio - hero animations run when this becomes visible (after Enter Portfolio) */}
-      <div 
-        className={`min-h-screen transition-all duration-700 ease-in-out ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'} ${
-          portfolioVisible ? 'opacity-100 hero-enter' : 'opacity-0'
-        }`}
-        style={{ visibility: showIntro && !isIntroExiting ? 'hidden' : 'visible' }}
-      >
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       {/* Particle Trail Cursor */}
       <ParticleCursor />
       
@@ -537,7 +495,7 @@ export default function Portfolio() {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
-              {['home', 'about', 'skills', 'education', 'projects', 'contact'].map((section) => (
+              {['home', 'about', 'education', 'projects', 'contact'].map((section) => (
                 <button
                   key={section}
                   onClick={() => scrollToSection(section)}
@@ -580,7 +538,7 @@ export default function Portfolio() {
         {isMenuOpen && (
           <div className={`md:hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} animate-slide-down`}>
             <div className="px-4 py-3 space-y-3">
-              {['home', 'about', 'skills', 'education', 'projects', 'contact'].map((section, idx) => (
+              {['home', 'about', 'education', 'projects', 'contact'].map((section, idx) => (
                 <button
                   key={section}
                   onClick={() => scrollToSection(section)}
@@ -614,21 +572,17 @@ export default function Portfolio() {
         />
         
         <div className="relative max-w-4xl mx-auto text-center z-10">
-          <div className="hero-block">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient hero-slide-up">
+          <div className="animate-fade-in-up">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
               Hi, I'm Wan Fatin Nabilah
             </h1>
-            <p className={`text-xl sm:text-2xl mb-8 h-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'} hero-slide-up`} style={{ animationDelay: '0.2s' }}>
+            <p className={`text-xl sm:text-2xl mb-8 h-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               {typedText}
               <span className="inline-block w-0.5 h-6 bg-blue-500 ml-1 animate-blink" />
             </p>
-            <p className={`text-lg mb-12 max-w-2xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              <span className="hero-line block hero-slide-up" style={{ animationDelay: '0.4s' }}>
-                I craft beautiful, functional web experiences using modern technologies.
-              </span>
-              <span className="hero-line block mt-2 hero-slide-up" style={{ animationDelay: '0.6s' }}>
-                Passionate about clean code and user-centric design.
-              </span>
+            <p className={`text-lg mb-12 max-w-2xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'} animate-fade-in`} style={{ animationDelay: '300ms' }}>
+              I craft beautiful, functional web experiences using modern technologies.
+              Passionate about clean code and user-centric design.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <button
@@ -670,156 +624,35 @@ export default function Portfolio() {
       <section 
         id="about" 
         ref={aboutRef}
-        className={`py-20 px-4 transition-all duration-700 relative overflow-hidden ${
+        className={`py-20 px-4 transition-all duration-700 ${
           aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
       >
-        {/* Decorative elements */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-blue-500/10 rounded-full blur-2xl animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 right-20 w-2 h-2 bg-blue-500 rounded-full animate-ping" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute top-1/3 left-20 w-2 h-2 bg-purple-500 rounded-full animate-ping" style={{ animationDelay: '1.5s' }} />
-        
-        <div className="max-w-5xl mx-auto relative z-10">
-          <div className="mb-10 text-center">
-            <h2 className="text-4xl font-bold animate-slide-in-bottom">About Me</h2>
-          </div>
-
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold mb-12 text-center animate-slide-in-bottom">About Me</h2>
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Text side */}
-            <div className="text-left">
+            <div>
               <p className={`text-lg mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-700'} ${aboutVisible ? 'animate-slide-in-left' : ''}`}>
                 I'm a Computer Science student passionate about web development and building
                 practical solutions to real-world problems. Currently focused on full-stack
                 development with React and Laravel.
               </p>
-              <p className={`text-lg mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-700'} ${aboutVisible ? 'animate-slide-in-left' : ''}`} style={{ animationDelay: '200ms' }}>
+              <p className={`text-lg ${darkMode ? 'text-gray-300' : 'text-gray-700'} ${aboutVisible ? 'animate-slide-in-left' : ''}`} style={{ animationDelay: '200ms' }}>
                 I enjoy learning new technologies, working on projects that challenge my skills,
                 and collaborating with others to create meaningful applications.
               </p>
             </div>
-
-            {/* Profile card side, near edge but with padding */}
-            <div className="flex justify-end w-full pr-4">
-              <div
-                className={`
-                  relative rounded-[32px] p-[4px] shadow-2xl max-w-sm w-full group
-                  ${darkMode ? 'bg-gradient-to-br from-cyan-400 via-purple-500 to-pink-500' : 'bg-gradient-to-br from-cyan-400 via-purple-500 to-pink-500'}
-                  ${aboutVisible ? 'animate-float' : ''}
-                  transition-transform duration-500 hover:-translate-y-4 hover:scale-[1.05]
-                `}
-              >
-                <div className={`rounded-[28px] h-full w-full bg-gradient-to-b ${
-                  darkMode ? 'from-gray-900/90 to-gray-800/90' : 'from-white/90 to-gray-100/90'
-                } px-8 py-10 flex flex-col items-center justify-between transition-colors duration-500`}>
-                  <div className="text-center mb-5">
-                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>“Always learning, always building.”</p>
-                  </div>
-
-                  <div className="w-52 h-52 rounded-3xl overflow-hidden mb-5 shadow-xl transform transition-transform duration-500 group-hover:scale-105">
-                    <img
-                      src={import.meta.env.BASE_URL + "profile-card.jpeg"}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  <div className="text-center mt-1">
-                    <h3 className="text-2xl font-semibold mb-1">Wjnaby</h3>
-                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Aspiring Full-Stack Developer</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section 
-        id="skills" 
-        ref={skillsRef}
-        className={`py-16 px-4 transition-all duration-700 relative overflow-hidden ${
-          skillsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}
-      >
-        {/* Decorative grid pattern */}
-        <div className={`absolute inset-0 opacity-[0.03] ${darkMode ? 'opacity-[0.05]' : ''}`}>
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle, ${darkMode ? '#fff' : '#000'} 1px, transparent 1px)`,
-            backgroundSize: '30px 30px'
-          }} />
-        </div>
-        {/* Floating code symbols */}
-        <div className={`absolute top-16 left-[10%] text-4xl font-mono ${darkMode ? 'text-gray-700' : 'text-gray-200'} animate-float`}>&lt;/&gt;</div>
-        <div className={`absolute bottom-16 right-[10%] text-3xl font-mono ${darkMode ? 'text-gray-700' : 'text-gray-200'} animate-float-delayed`}>{ }</div>
-        <div className={`absolute top-1/2 left-[5%] text-2xl font-mono ${darkMode ? 'text-gray-700' : 'text-gray-200'} animate-float`} style={{ animationDelay: '0.5s' }}>#</div>
-        
-        <div className="max-w-4xl mx-auto relative z-10">
-          <h2 className="text-3xl font-bold mb-3 text-center">Skills & Technologies</h2>
-          <p className={`text-center text-sm mb-8 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Hover over a skill to see my proficiency level
-          </p>
-          
-          {/* Compact Landscape Skills Layout */}
-          <div className="space-y-3">
-            {skills.map((skillGroup, idx) => (
-              <div 
-                key={idx} 
-                className={`px-4 py-3 rounded-xl transform transition-all duration-500 ${
-                  skillsVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                } ${
-                  darkMode 
-                    ? 'bg-gray-800 hover:shadow-lg hover:shadow-blue-500/10' 
-                    : 'bg-white shadow-md hover:shadow-lg'
-                }`}
-                style={{ transitionDelay: `${idx * 100}ms` }}
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                  {/* Category Label - Compact */}
-                  <div className={`flex items-center gap-2 sm:min-w-[120px] sm:border-r sm:pr-4 ${
-                    darkMode ? 'sm:border-gray-700' : 'sm:border-gray-200'
-                  }`}>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      idx === 0 ? 'bg-blue-500/20' : 
-                      idx === 1 ? 'bg-purple-500/20' : 
-                      idx === 2 ? 'bg-green-500/20' :
-                      'bg-pink-500/20'
-                    }`}>
-                      {idx === 0 && (
-                        <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                      )}
-                      {idx === 1 && (
-                        <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-                        </svg>
-                      )}
-                      {idx === 2 && (
-                        <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
-                        </svg>
-                      )}
-                      {idx === 3 && (
-                        <svg className="w-4 h-4 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                      )}
-                    </div>
-                    <h3 className={`text-sm font-semibold ${
-                      idx === 0 ? 'text-blue-500' : 
-                      idx === 1 ? 'text-purple-500' : 
-                      idx === 2 ? 'text-green-500' :
-                      'text-pink-500'
-                    }`}>
-                      {skillGroup.category}
-                    </h3>
-                  </div>
-                  
-                  {/* Skills - Compact Horizontal Flow */}
-                  <div className="flex-1 flex flex-wrap gap-2">
+            <div className="space-y-6" ref={skillsRef}>
+              {skills.map((skillGroup, idx) => (
+                <div 
+                  key={idx} 
+                  className={`transform transition-all duration-500 ${
+                    aboutVisible ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'
+                  }`}
+                  style={{ transitionDelay: `${idx * 150}ms` }}
+                >
+                  <h3 className="text-xl font-semibold mb-3 text-blue-500">{skillGroup.category}</h3>
+                  <div className="flex flex-wrap gap-2">
                     {skillGroup.items.map((skill, i) => (
                       <SkillButton
                         key={i}
@@ -832,8 +665,8 @@ export default function Portfolio() {
                     ))}
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -842,27 +675,11 @@ export default function Portfolio() {
       <section 
         id="education" 
         ref={educationRef}
-        className={`py-20 px-4 transition-all duration-700 relative overflow-hidden ${
+        className={`py-20 px-4 transition-all duration-700 ${
           educationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+        }`}
       >
-        {/* Decorative elements */}
-        <div className="absolute top-20 right-[15%] w-24 h-24 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-2xl animate-pulse" />
-        <div className="absolute bottom-20 left-[15%] w-20 h-20 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1.5s' }} />
-        {/* Graduation cap icon */}
-        <div className={`absolute top-24 left-[8%] ${darkMode ? 'text-gray-700' : 'text-gray-200'}`}>
-          <svg className="w-12 h-12 animate-float" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
-          </svg>
-        </div>
-        {/* Book icon */}
-        <div className={`absolute bottom-24 right-[8%] ${darkMode ? 'text-gray-700' : 'text-gray-200'}`}>
-          <svg className="w-10 h-10 animate-float-delayed" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/>
-          </svg>
-        </div>
-        
-        <div className="max-w-3xl mx-auto space-y-8 relative z-10">
+        <div className="max-w-3xl mx-auto space-y-8">
           <h2 className="text-4xl font-bold mb-12 text-center">Education</h2>
           <div className="max-w-3xl mx-auto space-y-8">
 
@@ -970,20 +787,11 @@ export default function Portfolio() {
       <section 
         id="projects" 
         ref={projectsRef}
-        className={`py-20 px-4 transition-all duration-700 relative overflow-hidden ${
+        className={`py-20 px-4 transition-all duration-700 ${
           projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         } ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
       >
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
-        <div className="absolute top-20 left-[5%] w-40 h-40 bg-blue-500/5 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-[5%] w-48 h-48 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        {/* Floating shapes */}
-        <div className={`absolute top-32 right-[10%] w-4 h-4 ${darkMode ? 'bg-blue-500/30' : 'bg-blue-500/20'} rounded rotate-45 animate-float`} />
-        <div className={`absolute bottom-32 left-[10%] w-3 h-3 ${darkMode ? 'bg-purple-500/30' : 'bg-purple-500/20'} rounded-full animate-float-delayed`} />
-        <div className={`absolute top-1/2 left-[3%] w-2 h-8 ${darkMode ? 'bg-pink-500/20' : 'bg-pink-500/10'} rounded animate-float`} style={{ animationDelay: '1s' }} />
-        
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold mb-12 text-center">Featured Projects</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, idx) => (
@@ -1047,32 +855,11 @@ export default function Portfolio() {
       <section 
         id="contact" 
         ref={contactRef}
-        className={`py-20 px-4 transition-all duration-700 relative overflow-hidden ${
+        className={`py-20 px-4 transition-all duration-700 ${
           contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
-        {/* Decorative gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5" />
-        {/* Decorative elements */}
-        <div className="absolute top-10 left-[10%] w-32 h-32 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-10 right-[10%] w-40 h-40 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }} />
-        {/* Envelope icon */}
-        <div className={`absolute top-20 right-[12%] ${darkMode ? 'text-gray-700' : 'text-gray-200'}`}>
-          <svg className="w-16 h-16 animate-float" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-          </svg>
-        </div>
-        {/* Chat bubble */}
-        <div className={`absolute bottom-24 left-[12%] ${darkMode ? 'text-gray-700' : 'text-gray-200'}`}>
-          <svg className="w-12 h-12 animate-float-delayed" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-          </svg>
-        </div>
-        {/* Small dots */}
-        <div className="absolute top-1/3 left-[5%] w-2 h-2 bg-blue-500/40 rounded-full animate-ping" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute bottom-1/3 right-[5%] w-2 h-2 bg-purple-500/40 rounded-full animate-ping" style={{ animationDelay: '1s' }} />
-        
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-8 text-center">Get In Touch</h2>
           <p className={`text-lg mb-12 text-center max-w-2xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             Feel free to reach out! Whether you have a question or just want to drop a message,
@@ -1260,7 +1047,6 @@ export default function Portfolio() {
             transform: scale(1.05) translateY(-5px);
           }
           100% {
-            opacity: 1;
             transform: scale(1) translateY(0);
           }
         }
@@ -1333,36 +1119,6 @@ export default function Portfolio() {
             opacity: 0.8;
           }
         }
-
-        /* Hero: slide up only – runs when .hero-enter is added (after Enter Portfolio) */
-        @keyframes hero-slide-up {
-          from {
-            transform: translateY(28px);
-            opacity: 1;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
-        .hero-block {
-          opacity: 1;
-        }
-
-        /* Start in "down" position; animation runs only when portfolio is entered */
-        .hero-slide-up {
-          transform: translateY(28px);
-          opacity: 1;
-        }
-
-        .hero-enter .hero-slide-up {
-          animation: hero-slide-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-
-        .hero-line {
-          display: block;
-        }
         
         .animate-fade-in-up {
           animation: fade-in-up 0.8s ease-out;
@@ -1379,10 +1135,8 @@ export default function Portfolio() {
         }
 
         .animate-bounce-in {
-          opacity: 0;
-        }
-        .hero-enter .animate-bounce-in {
-          animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+          animation-fill-mode: forwards;
         }
         .animate-slide-down {
           animation: slide-down 0.3s ease-out;
@@ -1451,7 +1205,6 @@ export default function Portfolio() {
           }
         }
       `}</style>
-      </div>
-    </>
+    </div>
   );
 }
