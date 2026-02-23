@@ -40,3 +40,45 @@
 .read-the-docs {
   color: #888;
 }
+
+/* About section: two parts — words and lanyard */
+.about-part {
+  box-sizing: border-box;
+}
+.about-part-words {
+  flex: 1 1 auto;
+}
+.about-part-lanyard {
+  flex: 0 0 auto;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.lanyard-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 320px;
+  min-height: 240px;
+  height: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: scale(1);
+  transform-origin: center;
+  background: transparent;
+}
+
+/* About section: taller area so lanyard + card hang naturally with subtle glow */
+.lanyard-wrapper.lanyard-about {
+  max-width: 280px;
+  min-height: 320px;
+  height: 320px;
+  filter: drop-shadow(0 8px 24px rgba(124, 58, 237, 0.2));
+}
+
+.lanyard-wrapper canvas {
+  background: transparent !important;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}

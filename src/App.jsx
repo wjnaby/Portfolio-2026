@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Moon, Sun, Github, Linkedin, Mail, ExternalLink, Menu, X, MapPin, Phone, Code, ChevronUp } from 'lucide-react';
+import './App.css';
 import IntroScreen from './components/IntroScreen';
 import ProfileCard from './components/ProfileCard';
 import HeroSection from './components/HeroSection';
+import Lanyard from './components/Lanyard';
 
 // Particle trail cursor component
 function ParticleCursor() {
@@ -227,20 +229,22 @@ function TechIcon({ name }) {
   return icons[name] || <Code className="w-4 h-4 mr-1.5" />;
 }
 
-// Custom hook for scroll reveal animations
+// Custom hook for scroll reveal animations (callback ref so we observe as soon as element exists)
+function useReveal(initialVisible = false) {
+  const [visible, setVisible] = useState(initialVisible);
+  const observerRef = useRef(null);
 
-// Custom hook for scroll reveal animations
-function useReveal() {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
+  const ref = useCallback((node) => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+      observerRef.current = null;
+    }
+    if (!node) return;
+    observerRef.current = new IntersectionObserver(
       ([entry]) => entry.isIntersecting && setVisible(true),
-      { threshold: 0.15 }
+      { threshold: 0.1, rootMargin: '50px' }
     );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    observerRef.current.observe(node);
   }, []);
 
   return [ref, visible];
@@ -383,10 +387,16 @@ export default function Portfolio() {
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['home', 'about', 'skills', 'education', 'projects', 'contact'];
-      const scrollPosition = window.scrollY + 100;
+      const scrollY = window.scrollY;
+      const scrollPosition = scrollY + 120;
 
-      // Show/hide scroll to top button
-      setShowScrollTop(window.scrollY > 400);
+      setShowScrollTop(scrollY > 400);
+
+      // At top of page, set home
+      if (scrollY < 150) {
+        setActiveSection('home');
+        return;
+      }
 
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -400,6 +410,7 @@ export default function Portfolio() {
       }
     };
 
+    handleScroll(); // run once on mount
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -509,7 +520,11 @@ export default function Portfolio() {
   const scrollToSection = (id) => {
     setActiveSection(id);
     setIsMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    if (id === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -530,48 +545,66 @@ export default function Portfolio() {
       <ParticleCursor />
       
       {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${darkMode ? 'bg-dblack/95 border-b border-dpurple-dark/50' : 'bg-dblack-800/95 border-b border-dpurple-dark/30'} backdrop-blur-md shadow-lg shadow-black/20`}>
+      <nav className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${darkMode ? 'bg-dblack/95 border-b border-dpurple-dark/50' : 'bg-dblack-800/95 border-b border-dpurple-dark/30'} backdrop-blur-md shadow-lg shadow-black/20`} aria-label="Main navigation">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="text-xl font-bold bg-gradient-to-r from-dpurple-glow to-dpurple-accent bg-clip-text text-transparent animate-pulse-slow">
+            <button
+              type="button"
+              onClick={() => scrollToSection('home')}
+              className="text-xl font-bold bg-gradient-to-r from-dpurple-glow to-dpurple-accent bg-clip-text text-transparent animate-pulse-slow hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-dpurple-glow rounded"
+              aria-label="Go to home"
+            >
               JW
-            </div>
+            </button>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center gap-6 lg:gap-8">
               {['home', 'about', 'skills', 'education', 'projects', 'contact'].map((section) => (
                 <button
                   key={section}
+                  type="button"
                   onClick={() => scrollToSection(section)}
-                  className={`capitalize transition-all duration-300 relative ${
+                  className={`capitalize transition-all duration-300 relative py-1 ${
                     activeSection === section
-                      ? 'text-dpurple-glow'
+                      ? 'text-dpurple-glow font-medium'
                       : darkMode ? 'text-dpurple-light/80 hover:text-white' : 'text-dpurple-light/90 hover:text-white'
                   }`}
+                  aria-current={activeSection === section ? 'true' : undefined}
                 >
                   {section}
                   {activeSection === section && (
-                    <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-dpurple-accent rounded-full transition-all duration-300 animate-expand" />
+                    <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-dpurple-accent rounded-full transition-all duration-300 animate-expand" aria-hidden />
                   )}
                 </button>
               ))}
               <button
+                type="button"
                 onClick={() => setDarkMode(!darkMode)}
                 className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 hover:rotate-12 active:scale-95 ${darkMode ? 'bg-dpurple-dark hover:bg-dpurple-mid text-dpurple-light' : 'bg-dpurple-dark/80 hover:bg-dpurple-mid text-dpurple-light'}`}
+                aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
               >
                 {darkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center space-x-2">
+            <div className="md:hidden flex items-center gap-2">
               <button
+                type="button"
                 onClick={() => setDarkMode(!darkMode)}
                 className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 hover:rotate-12 active:scale-95 ${darkMode ? 'bg-dpurple-dark hover:bg-dpurple-mid text-dpurple-light' : 'bg-dpurple-dark/80 hover:bg-dpurple-mid text-dpurple-light'}`}
+                aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
               >
                 {darkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 transition-transform duration-300 hover:scale-110 active:scale-95">
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 rounded-lg transition-all duration-300 hover:scale-110 active:scale-95 text-dpurple-light hover:text-white"
+                aria-expanded={isMenuOpen}
+                aria-controls="mobile-menu"
+                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              >
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
@@ -580,14 +613,23 @@ export default function Portfolio() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className={`md:hidden ${darkMode ? 'bg-dblack-700' : 'bg-dblack-700'} border-t border-dpurple-dark/50 animate-slide-down`}>
-            <div className="px-4 py-3 space-y-3">
+          <div
+            id="mobile-menu"
+            className="md:hidden bg-dblack-700 border-t border-dpurple-dark/50 animate-slide-down"
+            role="dialog"
+            aria-label="Mobile navigation"
+          >
+            <div className="px-4 py-3 space-y-1">
               {['home', 'about', 'skills', 'education', 'projects', 'contact'].map((section, idx) => (
                 <button
                   key={section}
+                  type="button"
                   onClick={() => scrollToSection(section)}
-                  className="block w-full text-left capitalize py-2 text-dpurple-light hover:text-dpurple-glow transition-colors animate-fade-in"
+                  className={`block w-full text-left capitalize py-3 px-2 rounded-lg transition-colors animate-fade-in ${
+                    activeSection === section ? 'text-dpurple-glow font-medium bg-dpurple-dark/50' : 'text-dpurple-light hover:text-dpurple-glow hover:bg-dpurple-dark/30'
+                  }`}
                   style={{ animationDelay: `${idx * 50}ms` }}
+                  aria-current={activeSection === section ? 'true' : undefined}
                 >
                   {section}
                 </button>
@@ -613,61 +655,27 @@ export default function Portfolio() {
           aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         } bg-transparent`}
       >
-        {/* Decorative elements */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-dpurple-accent/15 rounded-full blur-2xl animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-dpurple-glow/15 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 right-20 w-2 h-2 bg-dpurple-glow rounded-full animate-ping" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute top-1/3 left-20 w-2 h-2 bg-dpurple-accent rounded-full animate-ping" style={{ animationDelay: '1.5s' }} />
-        
-        <div className="max-w-5xl mx-auto relative z-10">
-          <div className="mb-10 text-center">
-            <h2 className="text-4xl font-bold animate-slide-in-bottom">About Me</h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Text side */}
-            <div className="text-left">
-              <p className={`text-lg mb-6 text-white ${aboutVisible ? 'animate-slide-in-left' : ''}`}>
-                I'm a Computer Science student passionate about web development and building
-                practical solutions to real-world problems. Currently focused on full-stack
-                development with React and Laravel.
+        <div className="max-w-6xl mx-auto relative z-10 rounded-2xl border border-dpurple-dark/50 bg-dblack-800/40 shadow-[0_0_40px_-10px_rgba(124,58,237,0.25)] backdrop-blur-sm overflow-hidden">
+          <div className="flex flex-col lg:flex-row items-stretch">
+            {/* Part 1: Words */}
+            <div className="about-part about-part-words flex-1 min-w-0 p-8 sm:p-10 lg:p-12 text-left">
+              <h2 className="text-4xl font-bold text-white mb-6 animate-slide-in-bottom">About Me</h2>
+              <p className={`text-white/95 text-lg leading-relaxed mb-4 ${aboutVisible ? 'animate-slide-in-bottom' : ''}`}>
+                I'm a full-stack developer passionate about building modern, high-performance applications with an intuitive user experience. I enjoy working with the latest technologies like Artificial Intelligence, Machine Learning, and cloud-based development, blending creativity with precision to deliver impactful solutions.
               </p>
-              <p className={`text-lg mb-8 text-white ${aboutVisible ? 'animate-slide-in-left' : ''}`} style={{ animationDelay: '200ms' }}>
-                I enjoy learning new technologies, working on projects that challenge my skills,
-                and collaborating with others to create meaningful applications.
+              <p className={`text-white/90 text-lg leading-relaxed mb-6 ${aboutVisible ? 'animate-slide-in-bottom' : ''}`} style={{ animationDelay: '80ms' }}>
+                With experience across multiple completed projects, I'm committed to writing clean code and creating solutions that make a difference.
+              </p>
+              <p className={`text-dpurple-glow/90 italic text-base ${aboutVisible ? 'animate-slide-in-bottom' : ''}`} style={{ animationDelay: '150ms' }}>
+                Working with heart, creating with mind.
               </p>
             </div>
-
-            {/* Profile card side, near edge but with padding */}
-            <div className="flex justify-end w-full pr-4">
-              <div
-                className={`
-                  relative rounded-[32px] p-[4px] shadow-2xl max-w-sm w-full group
-                  bg-gradient-to-br from-dpurple-accent via-dpurple-glow to-dpurple-mid
-                  ${aboutVisible ? 'animate-float' : ''}
-                  transition-transform duration-500 hover:-translate-y-4 hover:scale-[1.05] shadow-purple-glow
-                `}
-              >
-                <div className={`rounded-[28px] h-full w-full bg-gradient-to-b ${
-                  darkMode ? 'from-dblack to-dblack-700' : 'from-dblack-700 to-dpurple-deep'
-                } px-8 py-10 flex flex-col items-center justify-between transition-colors duration-500`}>
-                  <div className="text-center mb-5">
-                    <p className="text-sm text-white">“Always learning, always building.”</p>
-                  </div>
-
-                  <div className="w-52 h-52 rounded-3xl overflow-hidden mb-5 shadow-xl transform transition-transform duration-500 group-hover:scale-105">
-                    <img
-                      src={import.meta.env.BASE_URL + "profile-card.jpeg"}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  <div className="text-center mt-1">
-                    <h3 className="text-2xl font-semibold mb-1 text-white">Wjnaby</h3>
-                    <p className="text-sm text-white">Aspiring Full-Stack Developer</p>
-                  </div>
-                </div>
+            {/* Part 2: Lanyard */}
+            <div className="about-part about-part-lanyard flex-shrink-0 flex items-center justify-center min-w-[280px] p-6 sm:p-8 lg:border-l border-dpurple-dark/40">
+              <div className="lanyard-wrapper lanyard-about w-full">
+                {aboutVisible && (
+                  <Lanyard position={[0, 0, 24]} gravity={[0, -40, 0]} />
+                )}
               </div>
             </div>
           </div>
