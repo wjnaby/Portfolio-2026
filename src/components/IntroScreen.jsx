@@ -69,8 +69,7 @@ const GitHubIcon = ({ className }) => (
 );
 
 function IntroScreen({ onEnter, isExiting }) {
-  const welcomeText = "Welcome to My Portfolio";
-  const nameText = "Wan Fatin Nabilah";
+  const nameText = "Welcome to my Portfolio Website";
 
   // Tech logos to display between <Developer> tag and name
   const techLogos = [
@@ -82,7 +81,7 @@ function IntroScreen({ onEnter, isExiting }) {
   // Load Google Font
   useEffect(() => {
     const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap';
     link.rel = 'stylesheet';
     document.head.appendChild(link);
     return () => {
@@ -104,23 +103,23 @@ function IntroScreen({ onEnter, isExiting }) {
 
   return (
     <div
-      className={`fixed inset-0 z-[9998] flex flex-col items-center justify-center bg-gray-900 transition-opacity duration-700 ease-in-out ${
+      className={`fixed inset-0 z-[9998] flex flex-col items-center justify-center bg-[#0a0a0f] transition-opacity duration-700 ease-in-out ${
         isExiting ? 'opacity-0' : 'opacity-100'
       }`}
-      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+      style={{ fontFamily: "'Outfit', sans-serif" }}
     >
-      {/* Animated background gradient */}
+      {/* Animated background - black & dark purple */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#7c3aed]/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#8b5cf6]/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#4c3d7a]/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }} />
       </div>
 
       {/* Floating coding icons */}
       {floatingIcons.map(({ Icon, position, delay, size }, index) => (
         <div
           key={index}
-          className={`absolute ${position} ${size} text-gray-600/30 animate-float-icon`}
+          className={`absolute ${position} ${size} text-dpurple-mid/40 animate-float-icon`}
           style={{ animationDelay: delay }}
         >
           <Icon className="w-full h-full" />
@@ -130,10 +129,10 @@ function IntroScreen({ onEnter, isExiting }) {
       {/* Content */}
       <div className="relative z-10 text-center px-4">
         {/* Code opening tag decoration */}
-        <div className="flex justify-center mb-4 animate-fade-in-tag" style={{ fontFamily: "'Fira Code', monospace" }}>
-          <span className="text-purple-500/70 text-lg sm:text-xl">&lt;</span>
-          <span className="text-blue-400/70 text-lg sm:text-xl">Developer</span>
-          <span className="text-purple-500/70 text-lg sm:text-xl">&gt;</span>
+        <div className="flex justify-center mb-4 animate-fade-in-tag" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          <span className="text-dpurple-glow/80 text-lg sm:text-xl">&lt;</span>
+          <span className="text-dpurple-light/90 text-lg sm:text-xl">Developer</span>
+          <span className="text-dpurple-glow/80 text-lg sm:text-xl">&gt;</span>
         </div>
 
         {/* Tech Logo Icons Row */}
@@ -154,8 +153,8 @@ function IntroScreen({ onEnter, isExiting }) {
               />
               {/* Tooltip */}
               <span
-                className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
-                style={{ fontFamily: "'Fira Code', monospace" }}
+                className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+                style={{ fontFamily: "'JetBrains Mono', monospace" }}
               >
                 {label}
               </span>
@@ -168,33 +167,12 @@ function IntroScreen({ onEnter, isExiting }) {
           ))}
         </div>
 
-        {/* Welcome text with letter animation */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-0" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-          <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            {welcomeText.split(' ').map((word, wordIndex) => (
-              <span key={wordIndex} className="inline-block mr-3 sm:mr-4">
-                {word.split('').map((letter, letterIndex) => (
-                  <span
-                    key={letterIndex}
-                    className="inline-block animate-letter-bounce hover:animate-letter-wave"
-                    style={{
-                      animationDelay: `${wordIndex * 200 + letterIndex * 50}ms`,
-                    }}
-                  >
-                    {letter}
-                  </span>
-                ))}
-              </span>
-            ))}
-          </span>
-        </h1>
-
         {/* Name with wave animation */}
-        <p className="text-xl sm:text-2xl md:text-3xl text-gray-300 mb-2" style={{ fontFamily: "'Fira Code', monospace" }}>
+        <p className="text-xl sm:text-2xl md:text-3xl text-white mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
           {nameText.split('').map((letter, index) => (
             <span
               key={index}
-              className="inline-block animate-name-wave hover:text-purple-400 transition-colors cursor-default"
+              className="inline-block animate-name-wave transition-colors cursor-default"
               style={{
                 animationDelay: `${1200 + index * 60}ms`,
               }}
@@ -205,20 +183,20 @@ function IntroScreen({ onEnter, isExiting }) {
         </p>
 
         {/* Code closing tag decoration */}
-        <div className="flex justify-center mb-10 animate-fade-in-tag-delayed" style={{ fontFamily: "'Fira Code', monospace" }}>
-          <span className="text-purple-500/70 text-lg sm:text-xl">&lt;/</span>
-          <span className="text-blue-400/70 text-lg sm:text-xl">Developer</span>
-          <span className="text-purple-500/70 text-lg sm:text-xl">&gt;</span>
+        <div className="flex justify-center mb-10 animate-fade-in-tag-delayed text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          <span className="text-lg sm:text-xl">&lt;/</span>
+          <span className="text-lg sm:text-xl">Developer</span>
+          <span className="text-lg sm:text-xl">&gt;</span>
         </div>
 
         {/* Enter button */}
         <button
           onClick={onEnter}
-          className="group relative px-10 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/40 hover:scale-105 active:scale-95 animate-fade-in-intro-button"
-          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-        >
-          {/* Button glow effect */}
-          <span className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+className="group relative px-10 py-4 bg-dpurple-dark/60 backdrop-blur-md text-white text-lg font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:bg-dpurple-accent/30 hover:shadow-purple-glow hover:scale-105 active:scale-95 animate-fade-in-intro-button border border-dpurple-glow/30 shadow-inner"
+      style={{ fontFamily: "'Outfit', sans-serif", boxShadow: 'inset 0 1px 0 0 rgba(139, 92, 246, 0.2)' }}
+    >
+      {/* Glass hover glow */}
+      <span className="absolute inset-0 bg-gradient-to-r from-dpurple-accent/20 to-dpurple-glow/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <span className="relative flex items-center gap-2">
             <CodeBrackets className="w-5 h-5" />
             Enter Portfolio
