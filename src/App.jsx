@@ -159,13 +159,8 @@ function TechIcon({ name }) {
         <path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/>
       </svg>
     ),
-    'Postman': (
+    'DBeaver': (
       <Code className="w-4 h-4 mr-1.5" />
-    ),
-    'Figma': (
-      <svg className="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zM8.172 24c-2.489 0-4.515-2.014-4.515-4.49s2.014-4.49 4.49-4.49h4.588v4.441c0 2.503-2.047 4.539-4.563 4.539zm-.024-7.51a3.023 3.023 0 0 0-3.019 3.019c0 1.665 1.365 3.019 3.044 3.019 1.705 0 3.093-1.376 3.093-3.068v-2.97H8.148zm7.704 0h-.098c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h.098c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49zm-.097-7.509c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h.098c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-.098z"/>
-      </svg>
     ),
     'Ruby': (
       <svg className="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="currentColor">
@@ -344,6 +339,7 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [typedText, setTypedText] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showAllProjects, setShowAllProjects] = useState(false);
   const fullText = 'Computer Science Student & Web Developer';
 
   // Handle intro screen exit
@@ -449,9 +445,11 @@ export default function Portfolio() {
       title: "Cafe Ordering System",
       description: "Full-stack cafe ordering system with Admin and User roles. Features admin dashboard to manage menu items, pricing, and customer orders (CRUD operations), plus user-facing ordering flow for browsing menus and placing orders.",
       tech: ["Laravel", "PHP", "MySQL", "Tailwind CSS", "Vite", "JavaScript", "Git"],
-      link: "https://github.com/wjnaby/cafe-system",
+      link: "https://cafe-system-vsaw.onrender.com",
+      githubLink: "https://github.com/wjnaby/cafe-system",
       type: "Personal Project",
-      image: import.meta.env.BASE_URL + "cafe-order.jpeg"
+      image: import.meta.env.BASE_URL + "cafe-order.jpeg",
+      isLive: true
     },
     {
       title: "Cafe Recommendation System",
@@ -468,8 +466,21 @@ export default function Portfolio() {
       link: "https://github.com/wjnaby/todo_app",
       type: "Personal Project",
       image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&q=80"
+    },
+    {
+      title: "Portfolio Website",
+      description: "Personal portfolio showcasing my skills, projects, and experience. Clean, modern layout with work samples, About section, and easy navigation.",
+      tech: ["JavaScript", "React", "JSX", "CSS", "Tailwind CSS", "HTML", "Three.js", "React Three Fiber", "Drei", "Rapier", "Vite", "ESLint", "GitHub Pages"],
+      link: "https://github.com/wjnaby/portfolio-website",
+      type: "Personal Project",
+      image: import.meta.env.BASE_URL + "portfolio.jpeg"
     }
   ];
+
+  const featuredProjectTitles = ['Walk With Me 2026', 'Cafe Ordering System', 'SW Kitchen Bites', 'Portfolio Website'];
+  const displayedProjects = showAllProjects
+    ? projects
+    : featuredProjectTitles.map((title) => projects.find((p) => p.title === title)).filter(Boolean);
 
   const skills = [
     { 
@@ -511,8 +522,7 @@ export default function Portfolio() {
         { name: "GitHub", level: "Expert" },
         { name: "VS Code", level: "Expert" },
         { name: "Vite", level: "Advanced" },
-        { name: "Postman", level: "Advanced" },
-        { name: "Figma", level: "Intermediate" }
+        { name: "DBeaver", level: "Intermediate" }
       ]
     }
   ];
@@ -910,7 +920,7 @@ export default function Portfolio() {
       <section 
         id="projects" 
         ref={projectsRef}
-        className={`py-20 px-4 transition-all duration-700 relative overflow-hidden ${
+        className={`py-16 px-4 transition-all duration-700 relative overflow-hidden ${
           projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         } bg-transparent`}
       >
@@ -924,62 +934,98 @@ export default function Portfolio() {
         <div className="absolute top-1/2 left-[3%] w-2 h-8 bg-dpurple-mid/20 rounded animate-float" style={{ animationDelay: '1s' }} />
         
         <div className="max-w-6xl mx-auto relative z-10">
-          <h2 className="text-4xl font-bold mb-12 text-center">Featured Projects</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, idx) => (
+          <h2 className="text-4xl font-bold mb-8 text-center">Featured Projects</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayedProjects.map((project, idx) => (
               <div
                 key={idx}
-                className={`rounded-xl overflow-hidden transform transition-all duration-500 hover:-translate-y-3 hover:rotate-1 hover:shadow-2xl group ${
-                  projectsVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
-                } ${
-                  darkMode ? 'bg-dblack-700 hover:ring-2 hover:ring-dpurple-accent/30 border border-dpurple-dark/40' : 'bg-dblack-700 shadow-lg hover:ring-2 hover:ring-dpurple-accent/30 border border-dpurple-dark/30'
+                className={`rounded-xl overflow-hidden transform transition-all duration-500 hover:-translate-y-1 group ${
+                  projectsVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+                } backdrop-blur-xl border shadow-lg ${
+                  darkMode
+                    ? 'bg-white/5 border-white/10 hover:border-dpurple-accent/40 hover:shadow-purple-glow'
+                    : 'bg-white/20 border-white/20 hover:border-dpurple-accent/50 hover:shadow-xl'
                 }`}
-                style={{ transitionDelay: `${idx * 150}ms` }}
+                style={{ transitionDelay: `${idx * 100}ms` }}
               >
                 {/* Project Image */}
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-44 overflow-hidden rounded-t-xl">
                   <img 
                     src={project.image} 
                     alt={project.title}
-                    className="w-full h-full object-cover transform group-hover:scale-110 group-hover:rotate-2 transition-transform duration-700"
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <span className={`absolute top-4 right-4 text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm transition-all duration-300 group-hover:scale-110 ${
-                    darkMode ? 'bg-dblack/90 text-dpurple-light' : 'bg-dblack-700/90 text-dpurple-light'
-                  }`}>
+                  <span className="absolute top-3 right-3 text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-md bg-white/15 border border-white/20 text-dpurple-light">
                     {project.type}
                   </span>
                 </div>
 
                 {/* Project Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-dpurple-glow transition-colors">{project.title}</h3>
-                  <p className="mb-4 text-sm text-white">
+                <div className="p-4">
+                  <h3 className="text-lg font-bold mb-2 group-hover:text-dpurple-glow transition-colors">{project.title}</h3>
+                  <p className="mb-3 text-sm text-white/90 leading-snug line-clamp-3">
                     {project.description}
                   </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-1.5 mb-3">
                     {project.tech.map((tech, i) => (
                       <span
                         key={i}
-                        className="px-3 py-1 text-xs rounded-full bg-gradient-to-r from-dpurple-accent to-dpurple-glow text-white transform hover:scale-110 transition-transform duration-200"
+                        className="px-2 py-0.5 text-xs rounded-md bg-gradient-to-r from-dpurple-accent to-dpurple-glow text-white"
                       >
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-dpurple-glow hover:text-dpurple-light transition-colors group/link"
-                  >
-                    {project.isLive ? 'View Live Site' : 'View on GitHub'}
-                    <ExternalLink size={16} className="ml-2 transform group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
-                  </a>
+                  <div className="flex flex-wrap gap-3 pt-2 border-t border-white/10">
+                    {project.githubLink ? (
+                      <>
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-sm text-dpurple-glow hover:text-dpurple-light transition-colors group/link"
+                        >
+                          Live
+                          <ExternalLink size={14} className="group-hover/link:translate-x-0.5 transition-transform" />
+                        </a>
+                        <a
+                          href={project.githubLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-sm text-dpurple-glow hover:text-dpurple-light transition-colors group/link"
+                        >
+                          GitHub
+                          <ExternalLink size={14} className="group-hover/link:translate-x-0.5 transition-transform" />
+                        </a>
+                      </>
+                    ) : (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-dpurple-glow hover:text-dpurple-light transition-colors group/link"
+                      >
+                        {project.isLive ? 'View Live' : 'View on GitHub'}
+                        <ExternalLink size={14} className="group-hover/link:translate-x-0.5 transition-transform" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+          {projects.length > 4 && (
+            <div className="mt-10 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setShowAllProjects((prev) => !prev)}
+                className="px-8 py-4 rounded-xl font-semibold text-white text-base transition-all duration-300 min-w-[240px] focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-dblack-900 bg-gradient-to-r from-dpurple-accent to-dpurple-glow border-2 border-dpurple-light/30 shadow-lg hover:shadow-purple-glow hover:-translate-y-1 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                {showAllProjects ? 'Show Less' : 'View More Projects'}
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -1012,22 +1058,22 @@ export default function Portfolio() {
         <div className="absolute top-1/3 left-[5%] w-2 h-2 bg-dpurple-glow/50 rounded-full animate-ping" style={{ animationDelay: '0.5s' }} />
         <div className="absolute bottom-1/3 right-[5%] w-2 h-2 bg-dpurple-accent/50 rounded-full animate-ping" style={{ animationDelay: '1s' }} />
         
-        <div className="max-w-4xl mx-auto relative z-10">
-          <h2 className="text-4xl font-bold mb-8 text-center">Get In Touch</h2>
-          <p className="text-lg mb-12 text-center max-w-2xl mx-auto text-white">
+        <div className="max-w-2xl mx-auto relative z-10 px-4">
+          <h2 className="text-3xl font-bold mb-6 text-center">Get In Touch</h2>
+          <p className="text-base mb-8 text-center max-w-xl mx-auto text-white">
             Feel free to reach out! Whether you have a question or just want to drop a message,
             I'll do my best to get back to you.
           </p>
           
           {/* Contact Details */}
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
             {/* Location */}
-            <div className={`text-center p-6 rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
+            <div className={`text-center p-4 rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
               darkMode ? 'bg-dblack-700 border border-dpurple-dark/40' : 'bg-dblack-700 border border-dpurple-dark/30 shadow-purple-glow'
             }`}>
-              <div className="flex justify-center mb-4">
-                <div className="p-4 rounded-full bg-dpurple-accent/20">
-                  <MapPin size={24} className="text-dpurple-glow" />
+              <div className="flex justify-center mb-3">
+                <div className="p-3 rounded-full bg-dpurple-accent/20">
+                  <MapPin size={20} className="text-dpurple-glow" />
                 </div>
               </div>
               <h3 className="font-semibold mb-2 text-white">Location</h3>
@@ -1037,12 +1083,12 @@ export default function Portfolio() {
             </div>
 
             {/* Email */}
-            <div className={`text-center p-6 rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
+            <div className={`text-center p-4 rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
               darkMode ? 'bg-dblack-700 border border-dpurple-dark/40' : 'bg-dblack-700 border border-dpurple-dark/30 shadow-purple-glow'
             }`}>
-              <div className="flex justify-center mb-4">
-                <div className="p-4 rounded-full bg-dpurple-glow/20">
-                  <Mail size={24} className="text-dpurple-glow" />
+              <div className="flex justify-center mb-3">
+                <div className="p-3 rounded-full bg-dpurple-glow/20">
+                  <Mail size={20} className="text-dpurple-glow" />
                 </div>
               </div>
               <h3 className="font-semibold mb-2 text-white">Email</h3>
@@ -1055,12 +1101,12 @@ export default function Portfolio() {
             </div>
 
             {/* Phone */}
-            <div className={`text-center p-6 rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
+            <div className={`text-center p-4 rounded-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
               darkMode ? 'bg-dblack-700 border border-dpurple-dark/40' : 'bg-dblack-700 border border-dpurple-dark/30 shadow-purple-glow'
             }`}>
-              <div className="flex justify-center mb-4">
-                <div className="p-4 rounded-full bg-dpurple-mid/30">
-                  <Phone size={24} className="text-dpurple-light" />
+              <div className="flex justify-center mb-3">
+                <div className="p-3 rounded-full bg-dpurple-mid/30">
+                  <Phone size={20} className="text-dpurple-light" />
                 </div>
               </div>
               <h3 className="font-semibold mb-2 text-white">Phone</h3>
@@ -1076,7 +1122,7 @@ export default function Portfolio() {
           </div>
 
           {/* Social Links */}
-          <div className="flex justify-center space-x-6 mb-8">
+          <div className="flex justify-center space-x-4 mb-6">
             {[
               { icon: Github, link: "https://github.com/wjnaby", delay: 0 },
               { icon: Linkedin, link: "https://linkedin.com/in/yourusername", delay: 150 },
@@ -1087,14 +1133,14 @@ export default function Portfolio() {
                 href={link}
                 target={idx < 2 ? "_blank" : undefined}
                 rel={idx < 2 ? "noopener noreferrer" : undefined}
-                className={`p-4 rounded-full transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:rotate-12 active:scale-95 ${
+                className={`p-3 rounded-full transition-all duration-300 hover:scale-110 hover:-translate-y-2 hover:rotate-12 active:scale-95 ${
                   contactVisible ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
                 } ${
                   darkMode ? 'bg-dpurple-dark hover:bg-dpurple-accent hover:shadow-purple-glow text-dpurple-light' : 'bg-dpurple-dark hover:bg-dpurple-accent hover:text-white hover:shadow-purple-glow text-dpurple-light'
                 }`}
                 style={{ transitionDelay: `${delay}ms` }}
               >
-                <Icon size={24} />
+                <Icon size={20} />
               </a>
             ))}
           </div>
