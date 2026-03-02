@@ -499,6 +499,8 @@ export default function Portfolio() {
     { 
       category: "Backend", 
       items: [
+        { name: "C#", level: "Intermediate" },
+        { name: ".NET", level: "Intermediate" },
         { name: "Ruby", level: "Advanced" },
         { name: "Ruby on Rails", level: "Advanced" },
         { name: "PHP", level: "Intermediate" },
