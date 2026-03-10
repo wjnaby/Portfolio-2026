@@ -224,6 +224,25 @@ function TechIcon({ name }) {
   return icons[name] || <Code className="w-4 h-4 mr-1.5" />;
 }
 
+// Custom smooth scroll with configurable duration (ease-in-out)
+function smoothScrollTo(targetY, duration = 900) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) duration = 100;
+  const startY = window.scrollY;
+  const diff = targetY - startY;
+  const startTime = performance.now();
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+  function tick(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = easeInOutCubic(progress);
+    window.scrollTo(0, startY + diff * eased);
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
 // Custom hook for scroll reveal animations (callback ref so we observe as soon as element exists)
 function useReveal(initialVisible = false) {
   const [visible, setVisible] = useState(initialVisible);
@@ -379,6 +398,16 @@ export default function Portfolio() {
     return () => clearInterval(interval);
   }, []);
 
+  // When expanding projects, scroll so new cards are visible
+  useEffect(() => {
+    if (!showAllProjects) return;
+    const el = document.getElementById('projects');
+    if (el) {
+      const targetY = el.getBoundingClientRect().top + window.scrollY - 80;
+      smoothScrollTo(Math.max(0, targetY), 800);
+    }
+  }, [showAllProjects]);
+
   // Scroll tracking for active section and scroll to top button
   useEffect(() => {
     const handleScroll = () => {
@@ -412,7 +441,7 @@ export default function Portfolio() {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    smoothScrollTo(0);
   };
 
   const projects = [
@@ -532,11 +561,9 @@ export default function Portfolio() {
   const scrollToSection = (id) => {
     setActiveSection(id);
     setIsMenuOpen(false);
-    if (id === 'home') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    const el = id === 'home' ? null : document.getElementById(id);
+    const targetY = el ? el.getBoundingClientRect().top + window.scrollY : 0;
+    smoothScrollTo(targetY);
   };
 
   return (
@@ -940,7 +967,7 @@ export default function Portfolio() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedProjects.map((project, idx) => (
               <div
-                key={idx}
+                key={project.title}
                 className={`rounded-xl overflow-hidden transform transition-all duration-500 hover:-translate-y-1 group ${
                   projectsVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
                 } backdrop-blur-xl border shadow-lg ${
@@ -948,7 +975,7 @@ export default function Portfolio() {
                     ? 'bg-white/5 border-white/10 hover:border-dpurple-accent/40 hover:shadow-purple-glow'
                     : 'bg-white/20 border-white/20 hover:border-dpurple-accent/50 hover:shadow-xl'
                 }`}
-                style={{ transitionDelay: `${idx * 100}ms` }}
+                style={{ transitionDelay: showAllProjects ? 0 : `${idx * 100}ms` }}
               >
                 {/* Project Image */}
                 <div className="relative h-44 overflow-hidden rounded-t-xl">
